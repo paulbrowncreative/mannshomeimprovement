@@ -3,7 +3,7 @@ import Image from "next/image";
 import { site, estimateProcess, serviceAreas } from "@/content/site";
 import { projects } from "@/content/projects";
 import { homeFaqs } from "@/content/faqs";
-import { getService } from "@/content/services";
+import { getService, services } from "@/content/services";
 import { pageMeta } from "@/lib/metadata";
 import { HouseElevation, ServiceSheet } from "@/components/Illustrations";
 import { ServiceGrid } from "@/components/ServiceGrid";
@@ -19,6 +19,9 @@ export const metadata = pageMeta({
     "Monroe, MI home improvement: kitchen and bath remodeling, basements, hardwood floors, crown molding and trim, decks and additions. Request an estimate.",
   path: "/",
 });
+
+const countWord = (n: number) =>
+  ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"][n] ?? String(n);
 
 const focus = [
   {
@@ -102,7 +105,7 @@ export default function HomePage() {
             <div>
               <p className="label">01 — Services</p>
               <h2 id="services-title" className="mt-4">
-                Seven kinds of work, one standard for the details
+                {countWord(services.length)} kinds of work, one standard for the details
               </h2>
             </div>
             <p className="lede">
@@ -222,9 +225,7 @@ export default function HomePage() {
               </ul>
             </>
           ) : (
-            <div id="work-title">
-              <FacebookProof />
-            </div>
+            <FacebookProof headingId="work-title" />
           )}
         </div>
       </section>

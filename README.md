@@ -2,47 +2,49 @@
 
 Marketing and lead-generation site for Mann's Home Improvement LLC (Monroe, Michigan).
 
-- **Stack:** Next.js 16 (App Router), React 19, TypeScript, plain CSS with design tokens. No UI framework, no CSS framework, no client-side data fetching.
-- **Rendering:** every page is statically generated. The only server code is the estimate-form endpoint (`/api/estimate`).
+- **Stack:** Next.js 16 (App Router) with static export, React 19, TypeScript, plain CSS with design tokens.
+- **Output:** a folder of static HTML/CSS/JS (`out/`). There's no server to maintain.
+- **Estimate form:** handled by [Netlify Forms](https://docs.netlify.com/forms/setup/). No API keys, no backend.
 - **Runtime dependencies:** `next`, `react` and `react-dom`, nothing else.
 
 ## Quick start
 
 ```bash
 npm install
-cp .env.example .env.local   # optional for local dev
-npm run dev                  # http://localhost:3000
+npm run dev          # http://localhost:3000
 npm run typecheck
-npm run build && npm start   # production build
+npm run build        # writes the static site to out/
 ```
 
-In development, if no delivery is configured, estimate requests are written to the server console so you can test the form.
+The form only submits for real on Netlify. Locally, a submission shows the "couldn't send" error with the phone number, which is the expected fallback.
 
-## Deploying
+## Deploying to Netlify
 
-The site needs a Node-capable host for the form endpoint. **Vercel** is the simplest choice: import the GitHub repo and accept the defaults. Netlify and any Node 20+ server running `npm run build && npm start` also work.
+### Option A: drag and drop (no Git, no build)
+1. Unzip `mannshomeimprovement-netlify.zip`. You get a folder containing `index.html`.
+2. In Netlify, go to **Add new project → Deploy manually** and drag the **folder** in. (For an existing site: **Deploys** tab → drag the folder onto the drop zone.)
+3. **Turn on form detection.** Go to **Project configuration → Forms → Enable form detection**, then deploy the folder **once more**. Netlify only registers forms on deploys made after detection is enabled.
+4. **Set up lead notifications.** Go to **Forms → Form notifications → Add notification → Email notification**, choose the `estimate` form, and enter the address that should receive leads. Every submission is also stored under **Forms → estimate**.
+5. Submit a test request on the live site and confirm the email arrives.
 
-Set these environment variables on the host:
+### Option B: connect the GitHub repository (recommended long term)
+Netlify reads `netlify.toml`: build command `npm run build`, publish directory `out`, Node 22. Every push to the main branch redeploys. Deploy previews are automatically blocked from search engines through `robots.txt`. Steps 3–5 above still apply.
 
-| Variable | Required | Purpose |
+### Build-time settings
+These are baked in when the site is built. For Option B, set them under **Project configuration → Environment variables**. For a drag-and-drop zip, they have to be set before building it.
+
+| Variable | Default | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | **Yes** | Production origin, e.g. `https://www.mannshomeimprovement.com`. Drives canonicals, sitemap, Open Graph and schema. |
-| `RESEND_API_KEY` | One delivery method required | [Resend](https://resend.com) API key, used to email each estimate request. |
-| `ESTIMATE_TO_EMAIL` | With Resend | Where leads go. Comma-separate multiple addresses. |
-| `ESTIMATE_FROM_EMAIL` | Recommended | Sender on a domain verified in Resend, e.g. `Website <estimates@mannshomeimprovement.com>`. |
-| `ESTIMATE_WEBHOOK_URL` | Alternative or extra | Receives each lead as JSON. Works with Zapier, Make, a CRM or Google Sheets. |
-| `NEXT_PUBLIC_GA_ID` | Optional | GA4 measurement ID (`G-…`). Analytics loads only when this is set. |
-| `NEXT_PUBLIC_GSC_VERIFICATION` | Optional | Google Search Console HTML-tag verification token. |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.mannshomeimprovement.com` | Production origin. Drives canonicals, sitemap, social cards and schema. **Must match the real domain.** |
+| `NEXT_PUBLIC_GA_ID` | (none) | GA4 measurement ID (`G-…`). Analytics loads only when this is set. |
+| `NEXT_PUBLIC_GSC_VERIFICATION` | (none) | Google Search Console HTML-tag token. (Verifying with a DNS record instead needs no rebuild.) |
 
-> **The form will not deliver leads in production until Resend or a webhook is configured.** Until then it shows visitors an honest error with the phone number, and it never pretends to have sent anything. After deploying, submit a test request.
+### Domain
+1. Under **Domain management**, add the custom domain and follow Netlify's DNS steps. HTTPS is issued automatically.
+2. Make the www version (or the apex, whichever matches `NEXT_PUBLIC_SITE_URL`) the primary domain. Netlify redirects the other one to it.
+3. Submit `https://<domain>/sitemap.xml` in Google Search Console, and add the website URL to the Google Business Profile.
 
-On Vercel, `robots.txt` blocks indexing on preview deployments automatically. Production allows crawling and lists the sitemap.
-
-### Domain and launch steps
-1. Point the domain at the host and enforce HTTPS. Pick the www or apex version and redirect the other one to it (configured in the host's domain settings).
-2. Set `NEXT_PUBLIC_SITE_URL` to that exact origin and redeploy.
-3. Verify the site in Google Search Console and submit `/sitemap.xml`.
-4. Set the website URL on the Google Business Profile.
+`public/_headers` sets the security headers and long-term caching for hashed assets. Netlify applies it on both deploy methods.
 
 ## Editing content
 
@@ -51,15 +53,17 @@ All content lives in `src/content/`. Pages update automatically from it.
 | File | What it controls |
 |---|---|
 | `site.ts` | Business name, phone, email, hours, license, service areas, Facebook/Google links, the estimate process steps |
-| `services.ts` | The seven service pages: copy, FAQs, related services. Removing an entry removes its page, links, form option and sitemap entry. |
-| `projects.ts` | Project gallery. The gallery and homepage "Recent projects" section switch on, and `/projects` becomes indexable, once entries exist. |
+| `services.ts` | The service pages: copy, FAQs, related services. Removing an entry removes its page, links, form option and sitemap entry. |
+| `projects.ts` | Project gallery. The gallery and homepage "Recent projects" switch on, and `/projects` becomes indexable, once entries exist. |
 | `faqs.ts` | Homepage FAQ |
 
-Optional fields such as `email`, `hours`, `licenseNumber` and `foundedYear` are hidden everywhere until they're filled in. Nothing displays as a placeholder.
+Optional fields such as `email`, `hours`, `licenseNumber` and `foundedYear` are hidden everywhere until filled in. Nothing shows as a placeholder.
 
 ### Adding project photos
-1. Put the originals in `public/images/projects/<project-slug>/`. JPGs from a phone are fine; Next.js generates AVIF/WebP at responsive sizes.
-2. Add an entry to `src/content/projects.ts` with descriptive alt text (what's in the photo, not "photo of kitchen").
+The static export doesn't resize images, so prepare them first:
+1. Resize to **2000px on the long side**, export as **WebP or JPG at about 80% quality** (Squoosh.app works well), and aim for under 400 KB each.
+2. Put them in `public/images/projects/<project-slug>/`.
+3. Add an entry to `src/content/projects.ts` with the image's `width`/`height` and descriptive alt text (what's in the photo, not "photo of kitchen").
 
 ## Analytics and conversion events
 
@@ -67,20 +71,20 @@ GA4 loads only when `NEXT_PUBLIC_GA_ID` is set, and never for visitors whose bro
 
 | Event | When | Mark as GA4 key event? |
 |---|---|---|
-| `generate_lead` | Estimate form submitted successfully (fires on `/contact/thank-you`, param `project_type`) | **Yes** |
+| `generate_lead` | Estimate submitted successfully (fires on `/contact/thank-you`, param `project_type`) | **Yes** |
 | `phone_click` | Any `tel:` link tapped (param `location`) | **Yes** |
 | `estimate_cta_click` | Any "Request an Estimate" link (param `location`) | No (engagement) |
 | `form_error` | Submission failed (param `status`) | No (diagnostics) |
-
-The `/contact/thank-you` page view can also serve as a Google Ads conversion. If you switch to Google Tag Manager, the same events go to `dataLayer` when `gtag` is absent.
 
 ## Project structure
 
 ```
 src/
-  app/            routes, metadata, sitemap.ts, robots.ts, opengraph-image.tsx, api/estimate
+  app/            routes, metadata, sitemap.ts, robots.ts
   components/     Header, Footer, MobileBar, EstimateForm, PageHero, Illustrations, …
   content/        all business content (edit here)
   lib/            schema.org builders, metadata helper, form validation, analytics
+public/           _headers, og-image.png, images/
 docs/             client checklist, SEO strategy, QA report
+netlify.toml      build settings for Git-connected deploys
 ```

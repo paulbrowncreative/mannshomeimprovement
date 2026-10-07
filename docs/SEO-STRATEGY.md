@@ -27,7 +27,7 @@ One primary theme per page, so pages don't compete with each other.
 ## What's implemented
 
 - A unique, intent-matched title and meta description on every page; one H1 per page; no skipped heading levels.
-- Canonical URLs, Open Graph and Twitter cards (generated share image), `robots.txt`, XML sitemap.
+- Canonical URLs, Open Graph and Twitter cards (a branded 1200×630 share image), `robots.txt`, XML sitemap.
 - Structured data:
   - `GeneralContractor` (LocalBusiness subtype) site-wide, with only verified fields
   - `WebSite`

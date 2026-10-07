@@ -1866,3 +1866,15 @@ fieldset.field {
     width: 100%;
   }
 }
+/* vector-effect isn't inherited, so apply it to every shape: line weight then
+   stays constant whether a drawing renders at 56px or 500px. */
+.line-art :is(path, line, rect, polyline, circle) {
+  vector-effect: non-scaling-stroke;
+}
+.sheet .line-art g {
+  stroke-width: 2.25;
+}
+.btn-row .btn svg {
+  width: 18px;
+  height: 18px;
+}

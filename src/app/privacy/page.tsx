@@ -27,8 +27,8 @@ export default function PrivacyPage() {
             share your information with third parties for marketing.
           </p>
           <p>
-            Form submissions are delivered to us through an email or form-processing service acting on our behalf, which
-            processes the data only to deliver it to us.
+            Form submissions are received and stored by our website host, Netlify, which processes them only to deliver
+            them to us. They are kept only as long as needed to respond to you.
           </p>
           <h2>Analytics</h2>
           <p>

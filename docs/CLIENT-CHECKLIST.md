@@ -10,7 +10,7 @@ The site is built so nothing unverified appears as fact. The items below either 
 | 2 | **Services:** confirm each of the seven services is offered. Anything to add or remove? | Kitchen, bathroom, basement, hardwood flooring, finish carpentry/crown molding, decks, additions (from the Facebook listing) | Service pages, nav, form options |
 | 3 | **Service area:** which cities and townships do you take work in? (e.g. Frenchtown Twp, Monroe Twp, LaSalle, Carleton, Dundee, Temperance/Bedford, Newport) | Only Monroe is listed | Service-area page, schema `areaServed`, footer |
 | 4 | **Estimate process:** do the four steps on the site match how you work? Are site visits and estimates free? (If so, we'll say "free estimates", which helps conversions.) | Neutral wording, no "free" claim | Homepage, About, Contact |
-| 5 | **Where leads should go:** which email address(es) get estimate requests, and do you want them in a CRM or spreadsheet too? | Not configured, so the form shows an error until it's set | Form delivery |
+| 5 | **Where leads should go:** which email address(es) should receive estimate requests? | Netlify Forms is built in; the notification email gets set in the Netlify dashboard | Form notifications |
 | 6 | **Domain:** which domain will the site live on? | Assumed `mannshomeimprovement.com` | Canonicals, sitemap, schema |
 
 ## 2. High-impact trust signals (add as soon as possible)

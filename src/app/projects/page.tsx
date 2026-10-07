@@ -5,7 +5,7 @@ import { site } from "@/content/site";
 import { pageMeta } from "@/lib/metadata";
 import { PageHero } from "@/components/PageHero";
 import { ProjectGallery } from "@/components/ProjectGallery";
-import { FacebookProof } from "@/components/FacebookProof";
+import { FacebookIcon } from "@/components/Icons";
 import { CtaBand } from "@/components/CtaBand";
 import { ServiceSheet } from "@/components/Illustrations";
 
@@ -47,13 +47,15 @@ export default function ProjectsPage() {
                   Want to see work similar to your project? Ask when you{" "}
                   <Link href="/contact">request an estimate</Link>.
                 </p>
+                <div className="btn-row mt-6">
+                  <a className="btn btn--outline btn--lg" href={site.social.facebook} target="_blank" rel="noopener">
+                    <FacebookIcon />
+                    See recent work on Facebook
+                    <span className="visually-hidden"> (opens in a new tab)</span>
+                  </a>
+                </div>
               </div>
               <ServiceSheet name="kitchen" title="Gallery — in progress" sheet="P-1" tone="paper" />
-            </div>
-          )}
-          {!hasProjects && (
-            <div className="mt-7">
-              <FacebookProof />
             </div>
           )}
         </div>

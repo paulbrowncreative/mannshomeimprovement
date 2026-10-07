@@ -211,7 +211,7 @@ const icons: Record<IllustrationKey, React.ReactNode> = {
 
 export function ServiceIcon({ name, className }: { name: IllustrationKey; className?: string }) {
   return (
-    <svg viewBox="0 0 64 64" className={className} aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 64 64" className={`line-art ${className ?? ""}`} aria-hidden="true" focusable="false">
       <g {...stroke}>{icons[name]}</g>
     </svg>
   );

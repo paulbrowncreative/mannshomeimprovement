@@ -24,7 +24,7 @@ export default function AboutPage() {
     <>
       <PageHero
         label="About"
-        title={`A ${site.location.city} home improvement company built around the finish work`}
+        title={`${site.location.city} remodeling, built around the finish work`}
         lede={`${site.name} is based in ${site.location.city}, ${site.location.regionName}, and specializes in ${site.specialty}.`}
         crumbs={[{ name: "About", href: "/about" }]}
         art={<ServiceSheet name="trim" title="Detail — casing & base" sheet="D-1" />}

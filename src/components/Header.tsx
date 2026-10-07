@@ -37,6 +37,9 @@ export function Header() {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // Keep keyboard and screen-reader focus inside the open menu.
+    const background = document.querySelectorAll<HTMLElement>("#main, .site-footer, .mobile-bar");
+    background.forEach((el) => el.setAttribute("inert", ""));
     menuRef.current?.querySelector<HTMLElement>("a")?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -49,6 +52,7 @@ export function Header() {
     window.addEventListener("resize", onResize);
     return () => {
       document.body.style.overflow = prev;
+      background.forEach((el) => el.removeAttribute("inert"));
       document.removeEventListener("keydown", onKey);
       window.removeEventListener("resize", onResize);
     };

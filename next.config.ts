@@ -1,22 +1,16 @@
 import type { NextConfig } from "next";
 
+/**
+ * Fully static export (`out/`) for Netlify. There is no server: the estimate
+ * form is handled by Netlify Forms, and HTTP headers live in public/_headers.
+ */
 const nextConfig: NextConfig = {
+  output: "export",
   poweredByHeader: false,
   images: {
-    formats: ["image/avif", "image/webp"],
-  },
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-        ],
-      },
-    ];
+    // No image optimization server in a static export. Add project photos
+    // pre-sized (≤2000px, WebP/JPG ~80% quality) — see README.
+    unoptimized: true,
   },
 };
 

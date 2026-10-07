@@ -27,8 +27,8 @@ export function pageMeta({
       title,
       description,
       // Page-level openGraph replaces the inherited object, so re-attach the shared image.
-      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: `${site.name} — ${site.location.city}, ${site.location.region}` }],
+      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: `${site.name} — ${site.location.city}, ${site.location.region}` }],
     },
-    twitter: { card: "summary_large_image", title, description, images: ["/opengraph-image"] },
+    twitter: { card: "summary_large_image", title, description, images: ["/og-image.png"] },
   };
 }

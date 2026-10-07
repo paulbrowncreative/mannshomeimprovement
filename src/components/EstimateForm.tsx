@@ -15,11 +15,13 @@ import { site } from "@/content/site";
 import { track } from "@/lib/analytics";
 import { AlertIcon } from "./Icons";
 
-const serverErrors: Record<string, string> = {
-  invalid: "Some required details were missing. Please check the form and try again.",
-  rate: "Too many requests from this connection.",
-  send: "Something went wrong on our end.",
-};
+/** Must match the `name` on the <form> — Netlify Forms routes submissions by it. */
+export const FORM_NAME = "estimate";
+
+const encode = (data: FormData) =>
+  new URLSearchParams(
+    Array.from(data.entries()).filter((e): e is [string, string] => typeof e[1] === "string"),
+  ).toString();
 
 export function EstimateForm() {
   const router = useRouter();
@@ -28,20 +30,15 @@ export function EstimateForm() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [message, setMessage] = useState("");
-  const [ts, setTs] = useState("");
   const [project, setProject] = useState("");
   const [method, setMethod] = useState<string>("call");
 
   useEffect(() => {
-    setTs(String(Date.now()));
-    const params = new URLSearchParams(window.location.search);
-    const p = params.get("project");
+    // Without JS the browser's native `required` validation applies; with JS we
+    // take over so errors are inline and specific.
+    if (formRef.current) formRef.current.noValidate = true;
+    const p = new URLSearchParams(window.location.search).get("project");
     if (p && projectOptions.some((o) => o.value === p)) setProject(p);
-    const err = params.get("error");
-    if (err && serverErrors[err]) {
-      setStatus("error");
-      setMessage(serverErrors[err]);
-    }
   }, []);
 
   useEffect(() => {
@@ -69,29 +66,25 @@ export function EstimateForm() {
     setStatus("submitting");
     setMessage("");
     try {
-      const res = await fetch(form.action, {
+      // Netlify Forms: URL-encoded POST including the hidden form-name field.
+      const res = await fetch("/", {
         method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode(data),
       });
-      const json = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: FieldErrors; message?: string };
-      if (res.ok && json.ok) {
+      if (res.ok) {
         try {
           sessionStorage.setItem("mhi_lead", input.project);
         } catch {}
         router.push("/contact/thank-you");
         return;
       }
-      if (json.errors) {
-        setErrors(json.errors);
-        focusFirstError(json.errors);
-      }
       setStatus("error");
-      setMessage(json.message ?? serverErrors.send);
+      setMessage("Something went wrong on our end.");
       track("form_error", { status: res.status });
     } catch {
       setStatus("error");
-      setMessage("We couldn't reach the server — check your connection and try again.");
+      setMessage("We couldn't reach the server — check your connection.");
       track("form_error", { status: 0 });
     }
   }
@@ -104,7 +97,7 @@ export function EstimateForm() {
     onInput: () => clearError(k),
   });
 
-  const ErrorText = ({ k }: { k: keyof EstimateInput }) =>
+  const errorText = (k: keyof EstimateInput) =>
     errors[k] ? (
       <p className="field-error" id={`${k}-error`}>
         <AlertIcon className="" />
@@ -115,12 +108,15 @@ export function EstimateForm() {
   return (
     <form
       ref={formRef}
-      action="/api/estimate"
+      name={FORM_NAME}
+      action="/contact/thank-you"
       method="post"
-      noValidate
+      data-netlify="true"
+      netlify-honeypot="website"
       onSubmit={onSubmit}
       aria-labelledby="estimate-form-title"
     >
+      <input type="hidden" name="form-name" value={FORM_NAME} />
       {status === "error" && message && (
         <div className="form-alert form-alert--error" role="alert" tabIndex={-1} ref={alertRef}>
           <strong>We couldn&rsquo;t send your request.</strong>
@@ -138,7 +134,7 @@ export function EstimateForm() {
         <div className="field">
           <label htmlFor="name">Name</label>
           <input id="name" name="name" type="text" autoComplete="name" required maxLength={limits.name} {...errProps("name")} />
-          <ErrorText k="name" />
+          {errorText("name")}
         </div>
 
         <div className="field">
@@ -152,7 +148,7 @@ export function EstimateForm() {
             required
             {...errProps("phone")}
           />
-          <ErrorText k="phone" />
+          {errorText("phone")}
         </div>
 
         <div className="field">
@@ -160,7 +156,7 @@ export function EstimateForm() {
             Email <span className="optional">(optional)</span>
           </label>
           <input id="email" name="email" type="email" autoComplete="email" maxLength={limits.email} {...errProps("email")} />
-          <ErrorText k="email" />
+          {errorText("email")}
         </div>
 
         <div className="field">
@@ -176,7 +172,7 @@ export function EstimateForm() {
             placeholder={site.location.city}
             {...errProps("town")}
           />
-          <ErrorText k="town" />
+          {errorText("town")}
         </div>
 
         <div className="field span-2">
@@ -201,7 +197,7 @@ export function EstimateForm() {
               </option>
             ))}
           </select>
-          <ErrorText k="project" />
+          {errorText("project")}
         </div>
 
         <div className="field span-2">
@@ -218,7 +214,7 @@ export function EstimateForm() {
           <p className="hint" id="details-hint">
             Have photos? Mention it and we&rsquo;ll tell you where to send them.
           </p>
-          <ErrorText k="details" />
+          {errorText("details")}
         </div>
 
         <fieldset className="field span-2">
@@ -241,7 +237,7 @@ export function EstimateForm() {
               </label>
             ))}
           </div>
-          <ErrorText k="contactMethod" />
+          {errorText("contactMethod")}
         </fieldset>
       </div>
 
@@ -250,7 +246,6 @@ export function EstimateForm() {
         <label htmlFor="website">Leave this field empty</label>
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
-      <input type="hidden" name="ts" value={ts} />
 
       <div className="form-foot">
         <button type="submit" className="btn btn--lg btn--block" disabled={status === "submitting"}>

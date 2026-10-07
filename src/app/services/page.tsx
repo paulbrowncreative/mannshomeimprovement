@@ -20,7 +20,7 @@ export default function ServicesPage() {
       <PageHero
         label="Services"
         title={`Home remodeling services in ${site.location.city}, ${site.location.region}`}
-        lede={`Interior remodeling and finish carpentry are the core of the work — ${site.specialty} — along with basements, floors, decks and additions.`}
+        lede={`The core of the business is ${site.specialty}, along with basements, hardwood floors, decks and additions.`}
         crumbs={[{ name: "Services", href: "/services" }]}
       />
 

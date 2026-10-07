@@ -68,8 +68,3 @@ export function validate(input: EstimateInput): FieldErrors {
   if (!contactMethods.some((m) => m.value === input.contactMethod)) e.contactMethod = "Please choose how to contact you.";
   return e;
 }
-
-export function formatPhone(raw: string) {
-  const d = normalizePhone(raw);
-  return d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : raw;
-}

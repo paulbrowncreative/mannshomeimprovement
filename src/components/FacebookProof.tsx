@@ -8,15 +8,19 @@ import { FacebookIcon } from "./Icons";
 export function FacebookProof({
   heading = "See recent work on Facebook",
   body = "Project photos, updates and recommendations from homeowners are posted on the Mann's Home Improvement Facebook page.",
+  headingId,
 }: {
   heading?: string;
   body?: string;
+  headingId?: string;
 }) {
   return (
     <div className="proof">
       <div>
         <p className="label">Recent work</p>
-        <h2 className="mt-4">{heading}</h2>
+        <h2 id={headingId} className="mt-4">
+          {heading}
+        </h2>
         <p>{body}</p>
       </div>
       <a className="btn btn--outline btn--lg" href={site.social.facebook} target="_blank" rel="noopener">

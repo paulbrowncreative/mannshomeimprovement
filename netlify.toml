@@ -1,0 +1,9 @@
+# Used for Git-connected deploys. (Drag-and-drop deploys upload the prebuilt
+# `out/` folder and read public/_headers instead.)
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
