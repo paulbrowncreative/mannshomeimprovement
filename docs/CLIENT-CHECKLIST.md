@@ -39,6 +39,6 @@ Easiest way to get them over: a shared Google Drive or Dropbox folder.
 
 - Business hours (if you want them shown)
 - A public email address
-- Logo, if you have one (the site uses a simple "M" roofline mark that can be replaced)
+- **Original logo file.** The site uses the logo from the Facebook page (about 510px, PNG). An original vector file (SVG, AI, EPS or PDF), or a large PNG with a transparent background, will look sharper in print and on high-resolution screens. Drop it in `public/images/` and regenerate the icons.
 - Google Business Profile: set one up or confirm you have one (see SEO-STRATEGY.md)
 - GA4 and Search Console access (we can set these up)

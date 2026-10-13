@@ -241,27 +241,3 @@ export function ServiceSheet({
     </div>
   );
 }
-
-export function BrandMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 40 40" className={className} aria-hidden="true" focusable="false">
-      <rect width="40" height="40" rx="6" fill="#1d3a33" />
-      <polyline
-        points="7,17 20,8 33,17"
-        fill="none"
-        stroke="#d3a557"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <polyline
-        points="12,31 12,19 20,25 28,19 28,31"
-        fill="none"
-        stroke="#f2ede2"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}

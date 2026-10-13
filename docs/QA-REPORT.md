@@ -1,6 +1,6 @@
 # QA report
 
-**Date:** October 7, 2026.
+**Date:** October 13, 2026 (third pass; second pass October 7).
 **Build tested:** the exact static export shipped in `mannshomeimprovement-netlify.zip`.
 **Test setup:** a local server emulating Netlify (clean URLs, `404.html`, gzip, Netlify Forms POST handling), Chromium via Playwright, and Lighthouse.
 
@@ -9,6 +9,7 @@
 | Area | Result |
 |---|---|
 | Functional tests | **31 / 31 pass** |
+| HTML validation (html-validate, all pages) | **0 real errors** after fixes (remaining notices are framework-generated attribute casing and React's internal IDs, both valid HTML) |
 | Links and assets | 28 URLs crawled, **0 broken**, 0 broken in-page anchors |
 | Responsive | 15 pages × 6 widths (320–1920px): **0 horizontal overflow, 0 console errors** |
 | SEO audit | 15 pages: unique titles and descriptions, 1 H1 each, canonical, OG image, valid JSON-LD, no heading skips |
@@ -18,10 +19,10 @@
 
 | Page | Mobile perf | Mobile LCP | Desktop perf | Desktop LCP | A11y / BP / SEO |
 |---|---|---|---|---|---|
-| `/` | 96 | 2.8 s | 100 | 0.6 s | 100 / 100 / 100 |
-| `/services/kitchen-remodeling` | 95 | 2.5 s | 100 | 0.5 s | 100 / 100 / 100 |
-| `/contact` | 97 | 2.4 s | 100 | 0.5 s | 100 / 100 / 100 |
-| `/about` | 97 | 2.6 s | 100 | 0.5 s | 100 / 100 / 100 |
+| `/` | 95 | 2.8 s | 100 | 0.6 s | 100 / 100 / 100 |
+| `/services/kitchen-remodeling` | 97 | 2.6 s | 100 | 0.5 s | 100 / 100 / 100 |
+| `/contact` | 98 | 2.3 s | 100 | 0.5 s | 100 / 100 / 100 |
+| `/about` | 96 | 2.6 s | 100 | 0.5 s | 100 / 100 / 100 |
 
 The remaining Lighthouse flags are framework baseline (about 29 KB of unused Next.js runtime) and nothing that can be addressed without changing frameworks. Re-check with PageSpeed Insights once the site is live on Netlify's CDN.
 
@@ -52,7 +53,12 @@ The remaining Lighthouse flags are framework baseline (about 29 KB of unused Nex
   - FAQ accordions open
 - **404:** unknown URLs get the custom 404 page with a 404 status.
 
-## Issues found and fixed in this pass
+## Fixed in the third pass (October 13)
+1. **Real logo added.** The Facebook page's logo (crossed hammers, nail apostrophe) now replaces the placeholder "M" mark in the header, footer, favicon, Apple touch icon, share image and `GeneralContractor` schema.
+2. **Invalid HTML:** on the homepage hero, the drawing's `<figcaption>` was nested inside a `<div>` rather than directly inside its `<figure>`. Fixed.
+3. **Phone numbers could break across lines** (e.g. "(734) 770-" / "7531"). Every `tel:` link now stays on one line.
+
+## Issues found and fixed in the second pass
 1. **Netlify compatibility:** the form posted to a server endpoint that a static or drag-and-drop deploy can't run. I rebuilt the site as a static export and moved the form to Netlify Forms (`data-netlify`, honeypot, `form-name`), with a no-JS fallback.
 2. **Share image:** it exported as an extensionless file (`/opengraph-image`) and rendered in a generic font. It's now a static `og-image.png` rendered with the site's own fonts, referenced in every page's metadata and in the schema.
 3. **Drawing line weights:** the service drawings rendered chunky at large sizes, because `vector-effect` isn't inherited. It's now applied to every shape, so all drawings share one line weight.

@@ -82,18 +82,16 @@ export default function HomePage() {
               </li>
             </ul>
           </div>
-          <figure className="hero__figure rise rise-2">
-            <div className="sheet">
-              <div style={{ padding: "6% 5% 2%" }}>
-                <HouseElevation className="sheet__art" />
-              </div>
-              <figcaption className="sheet__titleblock">
-                <span>
-                  {site.shortName} — {site.location.city}, {site.location.region}
-                </span>
-                <span aria-hidden="true">Sheet A-2</span>
-              </figcaption>
+          <figure className="hero__figure sheet rise rise-2">
+            <div style={{ padding: "6% 5% 2%" }}>
+              <HouseElevation className="sheet__art" />
             </div>
+            <figcaption className="sheet__titleblock">
+              <span>
+                {site.shortName} — {site.location.city}, {site.location.region}
+              </span>
+              <span aria-hidden="true">Sheet A-2</span>
+            </figcaption>
           </figure>
         </div>
       </section>

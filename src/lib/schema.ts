@@ -14,7 +14,7 @@ export function businessSchema() {
     url: site.url,
     telephone: site.phone.e164,
     ...(site.email ? { email: site.email } : {}),
-    logo: `${site.url}/icon.svg`,
+    logo: `${site.url}/images/logo.png`,
     image: `${site.url}/og-image.png`,
     description: `Home improvement company in ${site.location.city}, ${site.location.regionName}, focused on ${site.specialty}.`,
     address: {

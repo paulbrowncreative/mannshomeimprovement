@@ -391,9 +391,10 @@ a {
   min-height: 44px;
 }
 .brand__mark {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   flex: none;
+  border-radius: 50%;
 }
 .brand__text {
   display: grid;
@@ -1877,4 +1878,8 @@ fieldset.field {
 .btn-row .btn svg {
   width: 18px;
   height: 18px;
+}
+/* Never split a phone number across lines. */
+a[href^="tel:"] {
+  white-space: nowrap;
 }

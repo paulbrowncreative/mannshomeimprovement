@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { mainNav, site } from "@/content/site";
 import { services } from "@/content/services";
-import { BrandMark } from "./Illustrations";
 import { PhoneIcon } from "./Icons";
 
 function isCurrent(pathname: string, href: string) {
@@ -15,7 +14,16 @@ function isCurrent(pathname: string, href: string) {
 export function Brand() {
   return (
     <Link href="/" className="brand">
-      <BrandMark className="brand__mark" />
+      {/* Official logo (from the business's Facebook page). Decorative: the name is in the text beside it. */}
+      <img
+        className="brand__mark"
+        src="/images/logo-96.webp"
+        srcSet="/images/logo-96.webp 2x, /images/logo-144.webp 3x"
+        width={44}
+        height={44}
+        alt=""
+        decoding="async"
+      />
       <span className="brand__text">
         <span className="brand__name">Mann&rsquo;s</span>
         <span className="brand__sub">Home Improvement</span>
