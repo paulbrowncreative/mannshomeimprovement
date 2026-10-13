@@ -22,8 +22,8 @@ export default function ThankYouPage() {
             height: 64,
             margin: "0 auto var(--s-5)",
             borderRadius: "50%",
-            background: "var(--spruce)",
-            color: "var(--brass)",
+            background: "var(--accent)",
+            color: "var(--on-accent)",
             display: "grid",
             placeItems: "center",
           }}

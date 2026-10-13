@@ -53,6 +53,12 @@ The remaining Lighthouse flags are framework baseline (about 29 KB of unused Nex
   - FAQ accordions open
 - **404:** unknown URLs get the custom 404 page with a 404 status.
 
+## Color scheme update (October 13)
+The palette changed to charcoal backgrounds, white type and a single amber accent. All tokens were renamed by role (`--bg`, `--text`, `--accent`, …) in `src/app/globals.css`, so future palette changes happen in one place.
+- **Contrast against charcoal `#1c1d20`:** headings 17:1, body text 14:1, secondary text 7.6:1, amber accent 10:1. Text on amber buttons is 10:1.
+- **Form fields and outline buttons** use a brighter border, which meets the 3:1 non-text contrast guideline.
+- **After the change:** Lighthouse Accessibility is 100 on all 8 runs, including the color-contrast audit. All 31 functional tests pass, along with links, SEO, HTML and the 90-combination responsive sweep.
+
 ## Fixed in the third pass (October 13)
 1. **Real logo added.** The Facebook page's logo (crossed hammers, nail apostrophe) now replaces the placeholder "M" mark in the header, footer, favicon, Apple touch icon, share image and `GeneralContractor` schema.
 2. **Invalid HTML:** on the homepage hero, the drawing's `<figcaption>` was nested inside a `<div>` rather than directly inside its `<figure>`. Fixed.

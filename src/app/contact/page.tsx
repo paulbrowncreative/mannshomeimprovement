@@ -27,7 +27,7 @@ export default function ContactPage() {
             <h2 id="estimate-form-title" style={{ fontSize: "var(--fs-h3)", marginBottom: "var(--s-2)" }}>
               Tell us about your project
             </h2>
-            <p style={{ marginBottom: "var(--s-6)", color: "var(--ink-3)" }}>
+            <p style={{ marginBottom: "var(--s-6)", color: "var(--text-muted)" }}>
               Name, phone and project type are required. Everything else helps but is optional.
             </p>
             <EstimateForm />
